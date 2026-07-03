@@ -17,6 +17,9 @@
 
 include device/sony/kitakami-common/BoardConfigCommon.mk
 
+# Inherit from the proprietary version
+include vendor/sony/sumire/BoardConfigVendor.mk
+
 DEVICE_PATH := device/sony/sumire
 
 # Use Snapdragon LLVM, if available
@@ -35,7 +38,8 @@ TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/input/clearpad/wakeup_gesture"
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
-BOARD_CACHEIMAGE_PARTITION_SIZE := 209715200
+# Cache partition is repurposed as /metadata for FBE
+# BOARD_CACHEIMAGE_PARTITION_SIZE := 209715200
 BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 5513412608
@@ -48,14 +52,11 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 # Radio
 BOARD_HAVE_RADIO := true
 
+# Dual-SIM
+SIM_COUNT := 2
+
 # Security Patch Level
 VENDOR_SECURITY_PATCH := 2017-09-01
 
 # Wifi
 WIFI_BUS := PCIE
-
-# Init
-TARGET_INIT_VENDOR_LIB := libinit_sumire
-
-# Inherit from the proprietary version
--include vendor/sony/sumire/BoardConfigVendor.mk

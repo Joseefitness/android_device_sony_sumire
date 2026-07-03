@@ -17,6 +17,6 @@ PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/lineage_sumire.mk
 
 COMMON_LUNCH_CHOICES := \
-    lineage_sumire-user \
-    lineage_sumire-userdebug \
-    lineage_sumire-eng
+    lineage_sumire-bp4a-user \
+    lineage_sumire-bp4a-userdebug \
+    lineage_sumire-bp4a-eng
