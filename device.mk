@@ -18,8 +18,22 @@
 # Get common aspects
 $(call inherit-product, device/sony/kitakami-common/device-common.mk)
 
+# Persistent logcat (logs to /data/misc/logd/logcat).
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.logd.logpersistd=logcatd \
+    persist.logd.size=16777216
+
 # Get non-open-source specific aspects
 $(call inherit-product, vendor/sony/sumire/sumire-vendor.mk)
+
+# Get soong/libinit/vendor
+$(call soong_config_set,libinit,vendor_init_lib,libinit_sumire)
+
+# Power HAL's DOUBLE_TAP_TO_WAKE handler.
+$(call soong_config_set,qtipower,tap_to_wake_node,/sys/devices/virtual/input/clearpad/wakeup_gesture)
+
+# Enable the -DINTERACTION_BOOST cflag for the power HAL.
+$(call soong_config_set_bool,qtipower,interaction_boost,true)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -39,6 +53,22 @@ PRODUCT_COPY_FILES += \
 # Audio configuration
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths.xml
+
+# Fingerprint — FPC1145 over SPI + Sony fingerprint.msm8994.so (HAL @1.0) loaded by the LineageOS AIDL bridge service.
+PRODUCT_PACKAGES += \
+    android.hardware.biometrics.fingerprint-service.lineage \
+    liblights-core_vendor_shim
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.vendor.fingerprint.type=rear
+
+# FBE/metadata encryption
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vold.projid_quotas=false \
+    ro.crypto.dm_default_key.options_format.version=2
 
 # Input
 PRODUCT_COPY_FILES += \
@@ -66,10 +96,3 @@ PRODUCT_COPY_FILES += \
 # WLAN
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wlan/bcmdhd.cal:system/etc/firmware/wlan/bcmdhd/bcmdhd.cal
-
-# Fingerprint
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
-
-PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.1-service
