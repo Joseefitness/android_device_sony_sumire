@@ -18,11 +18,6 @@
 # Get common aspects
 $(call inherit-product, device/sony/kitakami-common/device-common.mk)
 
-# Persistent logcat (logs to /data/misc/logd/logcat).
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.logd.logpersistd=logcatd \
-    persist.logd.size=16777216
-
 # Get non-open-source specific aspects
 $(call inherit-product, vendor/sony/sumire/sumire-vendor.mk)
 
