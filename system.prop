@@ -13,7 +13,7 @@ dalvik.vm.heapminfree=512k
 dalvik.vm.heapmaxfree=8m
 
 # Display density
-ro.sf.lcd_density=384
+ro.sf.lcd_density=480
 
 # Semc props
 ro.semc.content.number=PA5
